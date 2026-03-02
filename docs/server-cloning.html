@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Cloning — Block-Suite Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html" class="active">Wiki</a></li>
+      <li><a href="bug-report.html">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- WIKI LAYOUT -->
+<div class="wiki-layout">
+  <aside class="wiki-sidebar" id="wikiSidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">
+        Server Cloning <span class="arrow">&#9656;</span>
+      </div>
+      <ul class="sidebar-links open">
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="server-cloning.html" class="active">Server Cloning</a></li>
+        <li><a href="playit-setup.html">Playit.gg Setup</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li><a href="advanced-cloning.html">Advanced Options</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <main class="wiki-content">
+
+  <h1>Server Cloning</h1>
+  <p>The Server Cloning tab is the core of Block-Suite. It lets you set up a transparent proxy that mirrors any Minecraft server, intercepting all player data in real-time.</p>
+
+  <!-- ===== OVERVIEW ===== -->
+  <h2 id="overview">Tab Overview</h2>
+
+  <p>The Server Cloning tab is divided into several sections, from top to bottom:</p>
+
+  <table>
+    <thead>
+      <tr><th>Section</th><th>Purpose</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Target Server Config</strong></td><td>Enter the target server IP, port, and proxy ports</td></tr>
+      <tr><td><strong>Original Server Status</strong></td><td>Live status card showing the real server's info (favicon, version, MOTD, players, ping)</td></tr>
+      <tr><td><strong>Control Buttons</strong></td><td>Setup, Start/Stop Velocity, Start/Stop Playit.gg, Stop All</td></tr>
+      <tr><td><strong>Status Bar</strong></td><td>Service indicators (green/red dots) + public address with Copy button</td></tr>
+      <tr><td><strong>Intercepted Data Table</strong></td><td>Real-time table of all captured events</td></tr>
+      <tr><td><strong>Players Summary</strong></td><td>Tree view grouping data by player name</td></tr>
+      <tr><td><strong>Activity Log</strong></td><td>Detailed system log with copy/export/clear options</td></tr>
+    </tbody>
+  </table>
+
+  <div class="screenshot">
+    <img src="assets/img/2.PNG" alt="Server Cloning tab overview with annotations">
+  </div>
+
+  <!-- ===== CONFIG ===== -->
+  <h2 id="configuration">Target Server Configuration</h2>
+
+  <table>
+    <thead>
+      <tr><th>Field</th><th>Default</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Server IP</strong></td>
+        <td><em>(empty)</em></td>
+        <td>The hostname or IP of the target Minecraft server (e.g., <code>play.example.com</code> or <code>192.168.1.100</code>)</td>
+      </tr>
+      <tr>
+        <td><strong>Port</strong></td>
+        <td><code>25565</code></td>
+        <td>The target server's port</td>
+      </tr>
+      <tr>
+        <td><strong>Proxy Port</strong></td>
+        <td><code>25565</code></td>
+        <td>The local port where Velocity listens. Players (or playit.gg) connect here</td>
+      </tr>
+      <tr>
+        <td><strong>Intercept Port</strong></td>
+        <td><code>35565</code></td>
+        <td>Internal TCP port for plugin → GUI communication. No need to change unless it conflicts</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-title">💡 Port Tips</div>
+    <p>If you already have a Minecraft server running on port 25565, change <strong>Proxy Port</strong> to something else (e.g., <code>25566</code>). The playit.gg tunnel will automatically route to whatever port you set.</p>
+  </div>
+
+  <!-- ===== SERVER STATUS ===== -->
+  <h2 id="server-status">Original Server Status</h2>
+
+  <p>The status card on the right side shows real-time information about the target server:</p>
+
+  <ul class="feature-list">
+    <li><strong>Favicon</strong> — The server's icon (64×64), decoded from base64</li>
+    <li><strong>Address</strong> — The resolved IP and port</li>
+    <li><strong>Domain</strong> — The hostname you entered</li>
+    <li><strong>Version</strong> — The Minecraft version (e.g., "Paper 1.20.4")</li>
+    <li><strong>Players</strong> — Online / Max count</li>
+    <li><strong>Ping</strong> — Color-coded latency:
+      <span class="badge badge-green">&lt; 50ms</span>
+      <span class="badge badge-orange">50–150ms</span>
+      <span class="badge badge-red">&gt; 150ms</span>
+    </li>
+    <li><strong>MOTD</strong> — Full Minecraft color-code rendering (§ codes + JSON components)</li>
+  </ul>
+
+  <p>Click the <strong>refresh icon</strong> to re-ping the server at any time.</p>
+
+  <div class="screenshot">
+    <img src="assets/img/3-1.PNG" alt="Server status card showing server info">
+  </div>
+
+  <!-- ===== CONTROLS ===== -->
+  <h2 id="controls">Control Buttons</h2>
+
+  <h3>Setup Environment</h3>
+  <p>Downloads and configures everything needed:</p>
+  <ol>
+    <li>Downloads the latest <strong>Velocity proxy</strong> from PaperMC (first time only)</li>
+    <li>Generates <code>velocity.toml</code> config pointing at your target — with all settings from <a href="advanced-cloning.html">Advanced Cloning</a></li>
+    <li>Installs the <strong>BlockSuite interceptor plugin</strong></li>
+    <li>Downloads <strong>ViaVersion + ViaBackwards</strong> if enabled in Settings</li>
+    <li>Downloads the <strong>playit.gg agent</strong> (first time only)</li>
+    <li>Auto-pings the target server to show its status</li>
+  </ol>
+
+  <div class="callout">
+    <div class="callout-title">💡 Switching Targets</div>
+    <p>You can click Setup Environment again with a different target IP. Block-Suite will automatically stop any running services, reconfigure the proxy, and prepare the new target.</p>
+  </div>
+
+  <h3>Start / Stop Velocity</h3>
+  <p><strong>Start Velocity</strong> launches the Velocity proxy and the interception server. The proxy binds to <code>0.0.0.0:&lt;proxy-port&gt;</code> so players can connect.</p>
+  <p><strong>Stop Velocity</strong> gracefully shuts down the proxy and interception server.</p>
+
+  <h3>Start / Stop Playit.gg</h3>
+  <p><strong>Start Playit.gg</strong> creates a public tunnel. After a few seconds, the public address appears in the status bar.</p>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ First-Time Playit.gg Setup</div>
+    <p>The first time you start playit.gg, a <strong>claim URL</strong> appears in the Activity Log (e.g., <code>https://playit.gg/claim/...</code>). Open this URL in your browser to link the agent to your free playit.gg account. This only needs to be done once.</p>
+  </div>
+
+  <h3>Stop All</h3>
+  <p>Emergency button — stops Velocity, Playit.gg, and the interception server simultaneously.</p>
+
+  <!-- ===== STATUS BAR ===== -->
+  <h2 id="status-bar">Status Bar</h2>
+
+  <p>The status bar shows the health of each service:</p>
+
+  <table>
+    <thead>
+      <tr><th>Indicator</th><th>🔴 Stopped</th><th>🟢 Running</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Velocity</strong></td><td>Proxy not running</td><td>Proxy accepting connections</td></tr>
+      <tr><td><strong>Playit.gg</strong></td><td>No public tunnel</td><td>Tunnel active</td></tr>
+      <tr><td><strong>Interception</strong></td><td>Not capturing</td><td>Ready to receive data from plugin</td></tr>
+    </tbody>
+  </table>
+
+  <p>The <strong>Public Address</strong> label shows the playit.gg address. Click <strong>Copy IP</strong> to copy it to your clipboard.</p>
+
+  <!-- ===== DATA TABLE ===== -->
+  <h2 id="interception">Intercepted Data Table</h2>
+
+  <p>Every event intercepted by the plugin appears here in real-time, newest on top:</p>
+
+  <table>
+    <thead>
+      <tr><th>Column</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Time</strong></td><td>Timestamp of the event (<code>yyyy-MM-dd HH:mm:ss</code>)</td></tr>
+      <tr><td><strong>Type</strong></td><td>Event type, color-coded (see below)</td></tr>
+      <tr><td><strong>Player</strong></td><td>Minecraft username</td></tr>
+      <tr><td><strong>UUID</strong></td><td>Player's UUID</td></tr>
+      <tr><td><strong>IP Address</strong></td><td>Player's real IP address</td></tr>
+      <tr><td><strong>Captured Data</strong></td><td>The intercepted data (password, skin hash, etc.)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Event Types</h3>
+  <table>
+    <thead>
+      <tr><th>Type</th><th>Color</th><th>What It Means</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>CONNECT</code></td><td><span class="badge badge-green">Green</span></td><td>Player joined the proxy</td></tr>
+      <tr><td><code>DISCONNECT</code></td><td><span style="color:var(--text-dim)">Gray</span></td><td>Player left</td></tr>
+      <tr><td><code>LOGIN</code></td><td><span class="badge badge-red">Red Bold</span></td><td>Player executed <code>/login &lt;password&gt;</code></td></tr>
+      <tr><td><code>REGISTER</code></td><td><span class="badge badge-red">Red Bold</span></td><td>Player executed <code>/register &lt;password&gt;</code></td></tr>
+      <tr><td><code>CHANGE_PASSWORD</code></td><td><span class="badge badge-orange">Orange Bold</span></td><td>Player changed their password</td></tr>
+      <tr><td><code>SKIN</code></td><td><span class="badge badge-blue">Blue</span></td><td>Player's skin texture data captured</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Data Actions</h3>
+  <ul class="feature-list">
+    <li><strong>Clear Data</strong> — Removes all entries from the table (doesn't affect saved data until next save cycle)</li>
+    <li><strong>Export CSV</strong> — Exports all data to a timestamped CSV file in the <code>runtime/</code> folder</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-title">💡 Intercepted Commands</div>
+    <p>The plugin captures these authentication commands: <code>/login</code>, <code>/l</code>, <code>/register</code>, <code>/reg</code>, <code>/changepassword</code>, <code>/changepass</code>, <code>/cp</code>, <code>/unregister</code>, <code>/unreg</code>. The password is extracted from the command arguments.</p>
+  </div>
+
+  <!-- ===== PLAYERS PANEL ===== -->
+  <h2 id="players">Players Summary Panel</h2>
+
+  <p>The tree view on the right groups all intercepted data by player name:</p>
+
+  <pre><code>▼ PlayerName (5 events)
+    UUID: 069a79f4-44e9-4726-a5be-fca90e38aaf5
+    IP: 192.168.1.50
+    [!] LOGIN: /login mypassword123
+    Connections: 3
+    Disconnections: 2</code></pre>
+
+  <ul class="feature-list">
+    <li>Each player node shows their <strong>Minecraft head icon</strong> (loaded from Minotar, cached locally)</li>
+    <li>Credential lines are prefixed with <code>[!]</code> for visibility</li>
+    <li><strong>Collapse All</strong> button collapses every player node</li>
+  </ul>
+
+  <h3>Right-Click Context Menu</h3>
+  <table>
+    <thead>
+      <tr><th>Action</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Copy Value</strong></td><td>Copies just the value (UUID text, IP address, credential, player name)</td></tr>
+      <tr><td><strong>Copy Full Line</strong></td><td>Copies the entire tree item text</td></tr>
+      <tr><td><strong>More Info</strong></td><td>Opens the Player Info Overlay</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===== PLAYER INFO ===== -->
+  <h2 id="player-info">Player More Info Overlay</h2>
+
+  <p>A detailed modal overlay for any player, accessed via right-click → <strong>More Info</strong>.</p>
+
+  <h3>Info Section</h3>
+  <p>Rows with copy buttons for:</p>
+  <ul class="feature-list">
+    <li><strong>Username</strong> — Minecraft name</li>
+    <li><strong>UUID</strong> — Mojang UUID</li>
+    <li><strong>IP</strong> — Player's IP address</li>
+    <li><strong>Password</strong> — Captured credential (if any)</li>
+  </ul>
+  <p>Each row has a copy icon that swaps to a check mark for 1.2 seconds after copying.</p>
+
+  <h3>Geolocation</h3>
+  <p>Using the <a href="http://ip-api.com" target="_blank">ip-api.com</a> service, the overlay shows:</p>
+  <ul>
+    <li>City, Region, Country</li>
+    <li>Latitude &amp; Longitude</li>
+    <li>ISP, Organization, AS Number</li>
+  </ul>
+
+  <h3>Interactive Map</h3>
+  <p>An embedded OpenStreetMap viewer with:</p>
+  <ul class="feature-list">
+    <li><strong>Draggable panning</strong> — click and drag to explore</li>
+    <li><strong>Zoom controls</strong> — + / − buttons, zoom range 3–16</li>
+    <li><strong>Recenter button</strong> — snaps back to the player's location</li>
+    <li><strong>Pin marker</strong> — red pin icon at the player's coordinates</li>
+  </ul>
+
+  <h3>Minecraft Skin</h3>
+  <ul class="feature-list">
+    <li>Full body render (200px tall) from Minotar</li>
+    <li><strong>Download Skin</strong> button — opens a file chooser to save the original skin PNG</li>
+  </ul>
+
+  <div class="screenshot">
+    <img src="assets/img/3.PNG" alt="Player More Info overlay showing geolocation map, skin, and copied data.">
+  </div>
+
+  <!-- ===== LOG ===== -->
+  <h2 id="log">Activity Log</h2>
+
+  <p>The log at the bottom records all system messages with timestamps (<code>[HH:mm:ss]</code>).</p>
+
+  <h3>Log Actions</h3>
+  <table>
+    <thead>
+      <tr><th>Button</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Copy Log</strong></td><td>Copies the entire log to clipboard</td></tr>
+      <tr><td><strong>Open Log</strong></td><td>Opens log in a separate, resizable window (800×500). Live-synced with the main log.</td></tr>
+      <tr><td><strong>Clear Log</strong></td><td>Clears all log entries</td></tr>
+    </tbody>
+  </table>
+
+  <p>The separate log window includes a <strong>Word Wrap</strong> toggle button and a line count indicator.</p>
+
+  <!-- ===== TOAST ===== -->
+  <h2 id="toasts">Toast Notifications</h2>
+
+  <p>Slide-in notifications appear from the top-right corner for important events:</p>
+
+  <table>
+    <thead>
+      <tr><th>Type</th><th>Icon</th><th>Usage</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="badge badge-green">SUCCESS</span></td><td>✓ (theme accent)</td><td>Setup complete, IP copied, data exported</td></tr>
+      <tr><td><span class="badge badge-red">ERROR</span></td><td>⚠ (red)</td><td>Setup failed, connection errors</td></tr>
+      <tr><td><span class="badge badge-orange">WARNING</span></td><td>⚠ (orange)</td><td>Missing fields, invalid ports</td></tr>
+    </tbody>
+  </table>
+
+  <p>Toasts automatically dismiss after 3 seconds with a slide-out animation.</p>
+
+  <!-- ===== DATA PERSISTENCE ===== -->
+  <h2 id="persistence">Data Persistence</h2>
+
+  <p>All intercepted data is automatically saved to <code>runtime/player_data.json</code> whenever new events arrive. When you relaunch Block-Suite, your previous data is restored into the table and player tree.</p>
+
+  <div class="callout">
+    <div class="callout-title">💡 Export Before Clearing</div>
+    <p>Use <strong>Export CSV</strong> before clicking <strong>Clear Data</strong> if you want to keep a record. Clearing removes data from both the table and the saved JSON file.</p>
+  </div>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="wiki.html">Wiki</a>
+</footer>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('wikiSidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('wikiSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+</script>
+
+</body>
+</html>

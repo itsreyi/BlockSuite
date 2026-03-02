@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — Block-Suite Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html" class="active">Wiki</a></li>
+      <li><a href="bug-report.html">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- WIKI LAYOUT -->
+<div class="wiki-layout">
+  <aside class="wiki-sidebar" id="wikiSidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">
+        Server Cloning <span class="arrow">&#9656;</span>
+      </div>
+      <ul class="sidebar-links open">
+        <li><a href="getting-started.html" class="active">Getting Started</a></li>
+        <li><a href="server-cloning.html">Server Cloning</a></li>
+        <li><a href="playit-setup.html">Playit.gg Setup</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li><a href="advanced-cloning.html">Advanced Options</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <main class="wiki-content">
+
+  <h1>Getting Started</h1>
+  <p>This guide will walk you through downloading, installing, and running Block-Suite for the first time.</p>
+
+  <!-- ===== REQUIREMENTS ===== -->
+  <h2 id="requirements">System Requirements</h2>
+
+  <table>
+    <thead>
+      <tr><th>Requirement</th><th>Details</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Operating System</td><td>Windows 10/11 (64-bit)</td></tr>
+      <tr><td>Java</td><td>Java 17+ (Java 21 recommended). Download from <a href="https://adoptium.net/" target="_blank">Adoptium</a></td></tr>
+      <tr><td>Internet</td><td>Required for downloading dependencies, updates, and playit.gg tunneling</td></tr>
+      <tr><td>RAM</td><td>Minimum 2 GB free (Velocity proxy uses ~512 MB–1 GB)</td></tr>
+      <tr><td>Ports</td><td>25565 (proxy), 35565 (interception) — configurable</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===== DOWNLOAD ===== -->
+  <h2 id="download">Download</h2>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Go to GitHub Releases</h4>
+      <p>Visit <a href="https://github.com/itsreyi/BlockSuite/releases/latest" target="_blank">github.com/itsreyi/BlockSuite/releases</a> and download the latest <code>.zip</code> file from the Assets section.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Extract the ZIP</h4>
+      <p>Right-click the downloaded ZIP file → <strong>Extract All</strong> → choose a folder (e.g., <code>C:\BlockSuite</code>). You'll see a folder containing the application files.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Run Block-Suite</h4>
+      <p>Double-click <code>Block-Suite.exe</code> to launch the application. On first run it will check for updates automatically.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">💡 Tip: Running from JAR</div>
+    <p>If you prefer running the JAR directly instead of the EXE, open a terminal and run:</p>
+    <pre><code>java -jar blocksuite-app-1.0.0.jar</code></pre>
+    <p>Make sure you're in the folder containing the JAR file.</p>
+  </div>
+
+  <!-- ===== FIRST LAUNCH ===== -->
+  <h2 id="first-launch">First Launch</h2>
+
+  <p>When Block-Suite starts, several things happen automatically:</p>
+
+  <h3>1. Internet Connectivity Check</h3>
+  <p>The app pings <code>api.github.com</code>, <code>google.com</code>, and <code>1.1.1.1</code> to verify internet access. If you're offline, a <strong>"No Internet Connection"</strong> overlay appears with a <strong>Retry</strong> button.</p>
+  <p>Internet is required for downloading the Velocity proxy, playit.gg agent, player skins, and geolocation data.</p>
+
+  <h3>2. Update Check</h3>
+  <p>Block-Suite queries GitHub Releases for the latest version. If an update is available, a <strong>mandatory update overlay</strong> appears — you must update before using the app. This ensures everyone runs the latest, most stable version.</p>
+  <p>The update downloads automatically, applies via a background script, and restarts the application.</p>
+
+  <h3>3. Main Window</h3>
+  <p>Once checks pass, the main window appears with 4 tabs:</p>
+
+  <table>
+    <thead>
+      <tr><th>Tab</th><th>Status</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Server Cloning</strong></td><td><span class="badge badge-green">Active</span></td><td>The main MITM proxy workflow — configure, start, intercept</td></tr>
+      <tr><td><strong>Network Scanner</strong></td><td><span class="badge badge-orange">Coming Soon</span></td><td>Scan for Minecraft servers on a network</td></tr>
+      <tr><td><strong>Jar Injector</strong></td><td><span class="badge badge-orange">Coming Soon</span></td><td>Jar injection tools for server security testing</td></tr>
+      <tr><td><strong>Settings</strong></td><td><span class="badge badge-green">Active</span></td><td>Server appearance, proxy options, themes</td></tr>
+    </tbody>
+  </table>
+
+  <div class="screenshot">
+    <img src="assets/img/0.PNG" alt="Main window on first launch">
+  </div>
+
+  <!-- ===== QUICK START ===== -->
+  <h2 id="quick-start">Quick Start Example</h2>
+
+  <p>Here's a practical, step-by-step example of cloning a Minecraft server:</p>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Legal Notice</div>
+    <p>Block-Suite is designed for <strong>authorized security testing only</strong>. Only test servers you own or have explicit written permission to test. Unauthorized access to computer systems is illegal.</p>
+  </div>
+
+  <h3>Scenario: Testing your own server at <code>play.myserver.com:25565</code></h3>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Enter Target Server</h4>
+      <p>In the <strong>Server Cloning</strong> tab, fill in:</p>
+      <ul>
+        <li><strong>Server IP:</strong> <code>play.myserver.com</code></li>
+        <li><strong>Port:</strong> <code>25565</code></li>
+        <li><strong>Proxy Port:</strong> <code>25565</code> (leave default)</li>
+        <li><strong>Intercept Port:</strong> <code>35565</code> (leave default)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Setup Environment</h4>
+      <p>Click <strong>Setup Environment</strong>. Block-Suite will:</p>
+      <ul>
+        <li>Download the Velocity proxy (first time only)</li>
+        <li>Generate proxy configuration for your target</li>
+        <li>Install the interception plugin</li>
+        <li>Download the playit.gg agent (first time only)</li>
+        <li>Auto-ping the target server to display its status</li>
+      </ul>
+      <p>Wait for the log to show <em>"Environment setup complete!"</em></p>
+    </div>
+  </div>
+
+  <div class="screenshot">
+    <img src="assets/img/2.PNG" alt="Environment setup log">
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Start the Proxy</h4>
+      <p>Click <strong>Start Velocity</strong>. The status indicators will turn green:</p>
+      <ul>
+        <li>🟢 Velocity: Running</li>
+        <li>🟢 Interception: Active</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">4</div>
+    <div class="step-content">
+      <h4>Create Public Tunnel</h4>
+      <p>Click <strong>Start Playit.gg</strong>. After a few seconds, a public address appears in the status bar (e.g. <code>example.at.playit.gg</code>). Click <strong>Copy IP</strong> to copy it.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">5</div>
+    <div class="step-content">
+      <h4>Haven't set up Playit.gg yet?</h4>
+      <p>If this is your first time, you need to <strong>claim the agent</strong>, <strong>create a tunnel</strong> in the playit.gg dashboard, and configure the <strong>Local IP</strong>, <strong>Local Port</strong>, and <strong>Proxy Protocol</strong>. Without this step, the tunnel won't work.</p>
+      <p>👉 <strong><a href="playit-setup.html">Follow the complete Playit.gg Setup guide →</a></strong></p>
+      <p>Once done, come back here and continue with step 6.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">6</div>
+    <div class="step-content">
+      <h4>Connect & Intercept</h4>
+      <p>Open Minecraft and connect to the public address. You'll be transparently proxied to the target server.</p>
+      <p>Try <code>/login test123</code>. Watch the interception table light up with the captured credential in real-time.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">7</div>
+    <div class="step-content">
+      <h4>Analyze Data</h4>
+      <p>Right-click a player in the <strong>Players Summary</strong> panel → <strong>More Info</strong> to see their full profile: geolocation, interactive map, Minecraft skin, credentials, and export options.</p>
+    </div>
+  </div>
+
+  <div class="screenshot">
+     <img src="assets/img/3.PNG" alt="Player More Info overlay showing geolocation map, skin, and copied data.">
+  </div>
+
+  <!-- ===== FOLDER STRUCTURE ===== -->
+  <h2 id="folder-structure">Runtime Folder Structure</h2>
+
+  <p>Block-Suite creates a <code>runtime/</code> folder next to the application. Here's what it contains:</p>
+
+  <pre><code>runtime/
+├── settings.json           # Your saved settings (themes, proxy options)
+├── player_data.json        # All intercepted data (persisted across sessions)
+├── export_*.csv            # Exported data files
+├── heads/                  # Cached player head images
+├── velocity/
+│   ├── velocity.jar        # Downloaded Velocity proxy
+│   ├── velocity.toml       # Generated proxy config
+│   ├── forwarding.secret   # Forwarding secret key
+│   ├── blocksuite-ping.json # Server appearance overrides
+│   └── plugins/
+│       ├── blocksuite-plugin.jar  # Interception plugin
+│       ├── viaversion-*.jar       # (if ViaVersion enabled)
+│       └── viabackwards-*.jar     # (if ViaVersion enabled)
+└── playit/
+    ├── playit.exe          # Downloaded playit.gg agent
+    ├── playit.toml         # Playit configuration
+    └── tunnel_address.txt  # Saved public tunnel address</code></pre>
+
+  <div class="callout">
+    <div class="callout-title">💡 Tip</div>
+    <p>If something goes wrong, you can safely delete the entire <code>runtime/</code> folder and re-run Setup. Block-Suite will re-download everything fresh. Your intercepted data will be lost, so export first if needed.</p>
+  </div>
+
+  <!-- ===== NEXT STEPS ===== -->
+  <h2 id="next-steps">Next Steps</h2>
+
+  <div class="card-grid">
+    <a href="server-cloning.html" class="card" style="text-decoration:none;">
+      <h3>📖 Server Cloning Guide</h3>
+      <p>Deep dive into every feature of the Server Cloning tab.</p>
+    </a>
+    <a href="settings.html" class="card" style="text-decoration:none;">
+      <h3>⚙️ Settings Reference</h3>
+      <p>Customize server appearance, proxy options, and themes.</p>
+    </a>
+    <a href="advanced-cloning.html" class="card" style="text-decoration:none;">
+      <h3>🔧 Advanced Cloning</h3>
+      <p>Forwarding modes, HAProxy, BungeeGuard, timeouts, and more.</p>
+    </a>
+  </div>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="wiki.html">Wiki</a>
+</footer>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('wikiSidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('wikiSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+</script>
+
+</body>
+</html>

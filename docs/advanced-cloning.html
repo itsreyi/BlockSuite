@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Cloning — Block-Suite Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html" class="active">Wiki</a></li>
+      <li><a href="bug-report.html">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- WIKI LAYOUT -->
+<div class="wiki-layout">
+  <aside class="wiki-sidebar" id="wikiSidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">
+        Server Cloning <span class="arrow">&#9656;</span>
+      </div>
+      <ul class="sidebar-links open">
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="server-cloning.html">Server Cloning</a></li>
+        <li><a href="playit-setup.html">Playit.gg Setup</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li><a href="advanced-cloning.html" class="active">Advanced Options</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <main class="wiki-content">
+
+  <h1>Advanced Cloning Options</h1>
+  <p>This page explains every advanced proxy and cloning setting available in <strong>Settings → Proxy &amp; Cloning Settings</strong>. These options control how the Velocity proxy handles authentication, player forwarding, and network connections to maximize cloning effectiveness and bypass potential.</p>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ When do changes take effect?</div>
+    <p>All settings on this page take effect after clicking <strong>Setup Environment</strong> and restarting Velocity. The proxy reads these values when generating the <code>velocity.toml</code> configuration.</p>
+  </div>
+
+  <!-- ===== VIA VERSION ===== -->
+  <h2 id="viaversion">ViaVersion (Cross-Version Support)</h2>
+
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>Enable ViaVersion</td><td><strong>OFF</strong></td></tr></tbody>
+  </table>
+
+  <p>When enabled, Block-Suite downloads two plugins into the Velocity plugins folder:</p>
+  <ul>
+    <li><strong>ViaVersion</strong> — Lets newer Minecraft clients connect to older servers</li>
+    <li><strong>ViaBackwards</strong> — Lets older Minecraft clients connect to newer servers</li>
+  </ul>
+  <p>Combined, <strong>any client version can connect to any server version</strong>. This significantly increases the pool of potential "victims" connecting to your cloned server, since they don't need to match the target's exact version.</p>
+
+  <div class="callout success">
+    <div class="callout-title">✅ Recommendation</div>
+    <p>Enable ViaVersion for maximum compatibility. It's the single most impactful setting for increasing clone effectiveness.</p>
+  </div>
+
+  <!-- ===== FORWARDING ===== -->
+  <h2 id="forwarding">Player Forwarding</h2>
+
+  <p>Controls how the proxy forwards player information (IP, UUID, skin) to the target server. The correct mode depends on what the target server expects.</p>
+
+  <h3>Forwarding Mode</h3>
+
+  <table>
+    <thead>
+      <tr><th>Mode</th><th>When to Use</th><th>How It Works</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>none</code></td>
+        <td>Most targets — standalone servers that don't expect a proxy upstream</td>
+        <td>No forwarding. Player IPs appear as the proxy's IP on the target. Simplest and safest option.</td>
+      </tr>
+      <tr>
+        <td><code>legacy</code></td>
+        <td>Targets with <code>bungeecord: true</code> in <code>spigot.yml</code></td>
+        <td>BungeeCord-style IP forwarding. Sends player IP + UUID + skin using the legacy protocol. The target thinks players are connecting through a legitimate BungeeCord/Waterfall proxy.</td>
+      </tr>
+      <tr>
+        <td><code>modern</code></td>
+        <td>Targets configured for Velocity modern forwarding</td>
+        <td>Velocity's native forwarding protocol. Requires a <strong>matching forwarding secret</strong> on both the proxy and target. Most secure option — but you need to know the target's secret.</td>
+      </tr>
+      <tr>
+        <td><code>bungeeguard</code></td>
+        <td>Targets running the BungeeGuard plugin</td>
+        <td>Adds a security token to legacy BungeeCord forwarding. The target validates the token to prevent IP spoofing. Set the target's BungeeGuard token in the secret field.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Forwarding Secret</h3>
+  <p>The secret key used for <code>modern</code> and <code>bungeeguard</code> modes. Written to <code>runtime/velocity/forwarding.secret</code>.</p>
+  <ul>
+    <li>For <code>modern</code>: must match the target server's <code>forwarding-secret</code> in <code>paper-global.yml</code></li>
+    <li>For <code>bungeeguard</code>: must match the BungeeGuard plugin's configured token</li>
+    <li>For <code>none</code> and <code>legacy</code>: this field is disabled (not used)</li>
+  </ul>
+
+  <div class="callout">
+    <div class="callout-title">💡 Which mode should I choose?</div>
+    <p>If you don't know the target's configuration, start with <code>none</code>. If players get disconnected with "IP forwarding" errors, try <code>legacy</code>. Only use <code>modern</code> or <code>bungeeguard</code> if you know the target's secret key.</p>
+  </div>
+
+  <!-- ===== AUTHENTICATION ===== -->
+  <h2 id="authentication">Authentication & Security</h2>
+
+  <h3>Online Mode</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>Online Mode (Mojang authentication)</td><td><strong>OFF</strong></td></tr></tbody>
+  </table>
+  <p>Controls whether the proxy verifies player accounts with Mojang's authentication servers.</p>
+  <ul>
+    <li><strong>OFF (default)</strong> — Players can join without a premium Minecraft account. This is <strong>essential</strong> for cloning servers that use auth plugins (AuthMe, etc.) — which is most cracked servers.</li>
+    <li><strong>ON</strong> — Only premium (paid) Minecraft accounts can connect. Use this only when testing premium-only servers that require it.</li>
+  </ul>
+
+  <h3>Force Key Authentication</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>Force Key Authentication (chat signing)</td><td><strong>OFF</strong></td></tr></tbody>
+  </table>
+  <p>Enforces Minecraft's chat message signing system (introduced in 1.19.1). Keep <strong>OFF</strong> for maximum compatibility, as many servers disable this too.</p>
+
+  <h3>Prevent Client Proxy Connections</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>Prevent Client Proxy Connections</td><td><strong>OFF</strong></td></tr></tbody>
+  </table>
+  <p>When ON, blocks players who are connecting through a VPN or proxy service. Keep <strong>OFF</strong> for maximum compatibility — you want as many players as possible to be able to connect.</p>
+
+  <h3>Kick Existing Players</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>Kick Existing Players (same username takeover)</td><td><strong>OFF</strong></td></tr></tbody>
+  </table>
+  <p>When ON, if a player joins with the same username as someone already connected, the existing player is kicked and replaced. Useful for <strong>session takeover testing</strong> — a second connection with the same name takes over the session.</p>
+
+  <div class="callout danger">
+    <div class="callout-title">⚠️ Use with caution</div>
+    <p>Enabling "Kick Existing Players" can be disruptive. Only enable for specific takeover testing scenarios.</p>
+  </div>
+
+  <!-- ===== NETWORK ===== -->
+  <h2 id="network">Network & Performance</h2>
+
+  <h3>HAProxy Protocol</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>HAProxy Protocol</td><td><strong>ON</strong></td></tr></tbody>
+  </table>
+  <p>Enables the HAProxy PROXY protocol for real IP forwarding. This is used by DDoS protection services like:</p>
+  <ul>
+    <li><strong>TCPShield</strong></li>
+    <li><strong>Cosmic Guard</strong></li>
+    <li><strong>OVH Game DDoS Protection</strong></li>
+  </ul>
+  <p>Keep <strong>ON</strong> if the target is behind such services. Turn <strong>OFF</strong> if players get disconnected immediately on connect (some servers don't support PROXY protocol).</p>
+
+  <h3>TCP Fast Open</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>TCP Fast Open</td><td><strong>OFF</strong></td></tr></tbody>
+  </table>
+  <p>A network optimization that reduces connection latency by sending data in the initial TCP SYN packet. Requires OS-level support. Generally safe to enable on modern Windows systems.</p>
+
+  <h3>BungeeCord Plugin Message Channel</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th></tr></thead>
+    <tbody><tr><td>BungeeCord Plugin Message Channel</td><td><strong>ON</strong></td></tr></tbody>
+  </table>
+  <p>Enables the BungeeCord plugin messaging channel (<code>bungeecord:main</code>). Required for servers that use BungeeCord API for cross-server communication (e.g., server switching in networks, shared player data). Keep <strong>ON</strong> for maximum compatibility.</p>
+
+  <h3>Compression Threshold</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th><th>Range</th></tr></thead>
+    <tbody><tr><td>Compression Threshold</td><td><strong>256</strong></td><td>-1 (disabled) to 65,536</td></tr></tbody>
+  </table>
+  <p>Minimum packet size (in bytes) before compression is applied. Lower values = more CPU usage but less bandwidth. Set to <code>-1</code> to disable compression entirely. Default <code>256</code> is optimal for most cases.</p>
+
+  <h3>Login Rate Limit</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th><th>Range</th></tr></thead>
+    <tbody><tr><td>Login Rate Limit</td><td><strong>3000 ms</strong></td><td>0 to 60,000 ms</td></tr></tbody>
+  </table>
+  <p>Minimum time between login attempts from the same IP. Set to <code>0</code> to disable rate limiting (allows rapid reconnections).</p>
+
+  <h3>Connection Timeout</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th><th>Range</th></tr></thead>
+    <tbody><tr><td>Connection Timeout</td><td><strong>5000 ms</strong></td><td>1,000 to 60,000 ms</td></tr></tbody>
+  </table>
+  <p>How long to wait for the initial connection to the target server before timing out. Increase for high-latency targets.</p>
+
+  <h3>Read Timeout</h3>
+  <table>
+    <thead><tr><th>Setting</th><th>Default</th><th>Range</th></tr></thead>
+    <tbody><tr><td>Read Timeout</td><td><strong>30000 ms</strong></td><td>5,000 to 120,000 ms</td></tr></tbody>
+  </table>
+  <p>How long to wait for data from the target server before dropping the connection. Increase for slow or overloaded servers.</p>
+
+  <div class="screenshot">
+    <img src="assets/img/10.PNG" alt="Settings tab — Proxy & Cloning Settings section showing forwarding mode, authentication checkboxes, and network settings">
+  </div>
+
+  <!-- ===== PRESETS ===== -->
+  <h2 id="presets">Recommended Configurations</h2>
+
+  <h3>Cracked Server (AuthMe / LoginSecurity)</h3>
+  <p>Most common scenario. The target uses an auth plugin and accepts cracked players.</p>
+  <table>
+    <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Online Mode</td><td><strong>OFF</strong></td></tr>
+      <tr><td>Forwarding Mode</td><td><strong>none</strong></td></tr>
+      <tr><td>ViaVersion</td><td><strong>ON</strong></td></tr>
+      <tr><td>Force Key Auth</td><td><strong>OFF</strong></td></tr>
+      <tr><td>HAProxy</td><td><strong>ON</strong></td></tr>
+      <tr><td>BungeeCord Channel</td><td><strong>ON</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>BungeeCord Network Server</h3>
+  <p>The target is part of a BungeeCord/Waterfall network and has <code>bungeecord: true</code> in <code>spigot.yml</code>.</p>
+  <table>
+    <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Online Mode</td><td><strong>OFF</strong></td></tr>
+      <tr><td>Forwarding Mode</td><td><strong>legacy</strong></td></tr>
+      <tr><td>ViaVersion</td><td><strong>ON</strong></td></tr>
+      <tr><td>BungeeCord Channel</td><td><strong>ON</strong></td></tr>
+      <tr><td>HAProxy</td><td><strong>ON</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Velocity Network Server</h3>
+  <p>The target is behind a Velocity proxy with modern forwarding. You need the forwarding secret.</p>
+  <table>
+    <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Online Mode</td><td><strong>OFF</strong></td></tr>
+      <tr><td>Forwarding Mode</td><td><strong>modern</strong></td></tr>
+      <tr><td>Forwarding Secret</td><td><em>(target's secret)</em></td></tr>
+      <tr><td>ViaVersion</td><td><strong>ON</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Premium-Only Server</h3>
+  <p>The target requires Mojang-authenticated accounts.</p>
+  <table>
+    <thead><tr><th>Setting</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Online Mode</td><td><strong>ON</strong></td></tr>
+      <tr><td>Forwarding Mode</td><td><strong>none</strong></td></tr>
+      <tr><td>ViaVersion</td><td><strong>ON</strong></td></tr>
+      <tr><td>Force Key Auth</td><td>Match target's setting</td></tr>
+    </tbody>
+  </table>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="wiki.html">Wiki</a>
+</footer>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('wikiSidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('wikiSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+</script>
+
+</body>
+</html>

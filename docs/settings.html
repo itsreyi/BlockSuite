@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Block-Suite Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html" class="active">Wiki</a></li>
+      <li><a href="bug-report.html">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- WIKI LAYOUT -->
+<div class="wiki-layout">
+  <aside class="wiki-sidebar" id="wikiSidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">
+        Server Cloning <span class="arrow">&#9656;</span>
+      </div>
+      <ul class="sidebar-links open">
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="server-cloning.html">Server Cloning</a></li>
+        <li><a href="playit-setup.html">Playit.gg Setup</a></li>
+        <li><a href="settings.html" class="active">Settings</a></li>
+        <li><a href="advanced-cloning.html">Advanced Options</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <main class="wiki-content">
+
+  <h1>Settings</h1>
+  <p>The Settings tab controls how the cloned server appears in the Minecraft server list, proxy behaviour, and the application theme. All settings are saved automatically to <code>runtime/settings.json</code>.</p>
+
+  <!-- ===== SERVER APPEARANCE ===== -->
+  <h2 id="appearance">Cloned Server Appearance</h2>
+
+  <p>By default, the proxy uses <strong>ping passthrough</strong> — it copies the real target server's MOTD, favicon, player counts, and version info directly. Enable overrides below to customize what players see in the server list.</p>
+
+  <div class="callout">
+    <div class="callout-title">💡 When do changes take effect?</div>
+    <p>Appearance changes take effect when you next run <strong>Setup Environment</strong> and restart Velocity. The proxy reads these settings during configuration generation.</p>
+  </div>
+
+  <h3>Override MOTD</h3>
+  <p>Replace the server's Message of the Day with your own text. Supports <strong>MiniMessage format</strong>:</p>
+  <pre><code>&lt;green&gt;Welcome to &lt;bold&gt;My Server&lt;/bold&gt;&lt;/green&gt;
+&lt;gray&gt;Connecting...&lt;/gray&gt;</code></pre>
+  <p>Default value: <code>&lt;aqua&gt;My Custom Server&lt;/aqua&gt;</code></p>
+
+  <h3>Override Max Players</h3>
+  <p>Set a custom maximum player count shown in the server list. Range: 1–99,999. Default: 500.</p>
+
+  <h3>Override Online Players</h3>
+  <p>Set a custom online player count. Useful for making the server appear busy. Range: 0–99,999. Default: 0.</p>
+
+  <h3>Override Favicon</h3>
+  <p>Replace the server's icon with your own image. Requirements:</p>
+  <ul>
+    <li>Must be a <strong>PNG file</strong></li>
+    <li>Ideally <strong>64×64 pixels</strong> (auto-resized via bicubic interpolation if different)</li>
+    <li>Click <strong>Browse...</strong> to pick the file</li>
+  </ul>
+
+  <div class="screenshot">
+    <img src="assets/img/10.PNG" alt="Settings tab showing server appearance overrides">
+  </div>
+
+  <!-- ===== PROXY SETTINGS ===== -->
+  <h2 id="proxy">Proxy & Cloning Settings</h2>
+
+  <p>This section is documented in detail on the <a href="advanced-cloning.html">Advanced Cloning</a> page. Quick summary:</p>
+
+  <table>
+    <thead>
+      <tr><th>Setting Group</th><th>Key Options</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ViaVersion</strong></td>
+        <td>Cross-version support — lets any Minecraft client version connect</td>
+      </tr>
+      <tr>
+        <td><strong>Player Forwarding</strong></td>
+        <td>Mode (<code>none</code>, <code>legacy</code>, <code>modern</code>, <code>bungeeguard</code>) + secret key</td>
+      </tr>
+      <tr>
+        <td><strong>Authentication</strong></td>
+        <td>Online mode, force key auth, prevent proxy, kick existing players</td>
+      </tr>
+      <tr>
+        <td><strong>Network</strong></td>
+        <td>HAProxy, TCP Fast Open, BungeeCord channel, compression, timeouts</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ===== THEMES ===== -->
+  <h2 id="themes">Application Themes</h2>
+
+  <p>Block-Suite ships with 5 themes. The theme switches instantly — no restart required. All icons are automatically tinted to match the theme's accent color.</p>
+
+  <table>
+    <thead>
+      <tr><th>Theme</th><th>Accent Color</th><th>Style</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Default Dark</strong></td>
+        <td><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#6c8cff;vertical-align:middle;"></span> <code>#6c8cff</code></td>
+        <td>Dark background with blue accents</td>
+      </tr>
+      <tr>
+        <td><strong>Green Suite</strong></td>
+        <td><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#3a9d5c;vertical-align:middle;"></span> <code>#3a9d5c</code></td>
+        <td>Light background with green accents</td>
+      </tr>
+      <tr>
+        <td><strong>Black Green</strong></td>
+        <td><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#4ade80;vertical-align:middle;"></span> <code>#4ade80</code></td>
+        <td>Dark background with bright green accents</td>
+      </tr>
+      <tr>
+        <td><strong>Purple Suite</strong></td>
+        <td><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#7c5cbf;vertical-align:middle;"></span> <code>#7c5cbf</code></td>
+        <td>Light background with purple accents</td>
+      </tr>
+      <tr>
+        <td><strong>Black Purple</strong></td>
+        <td><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#a78bfa;vertical-align:middle;"></span> <code>#a78bfa</code></td>
+        <td>Dark background with lavender accents</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>The theme selector shows color swatches (primary, accent, background) next to each option name for easy visual identification.</p>
+
+  <div class="screenshot">
+    <img src="assets/img/11-1.PNG" alt="Settings tab showing the theme dark purple">
+    <img src="assets/img/11-2.PNG" alt="Settings tab showing the theme green suite">
+  </div>
+
+  <!-- ===== AUTO-UPDATE ===== -->
+  <h2 id="updates">Auto-Update System</h2>
+
+  <p>Block-Suite checks for updates on every launch by querying GitHub Releases. The update flow:</p>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <h4>Version Check</h4>
+      <p>Compares your current version against the latest release on GitHub using semantic versioning (e.g., <code>1.0.0</code> vs <code>1.1.0</code>).</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <h4>Update Required Overlay</h4>
+      <p>If a newer version exists, a <strong>non-dismissable overlay</strong> appears showing:</p>
+      <ul>
+        <li>Version transition (e.g., <code>v1.0.0 → v1.1.0</code>)</li>
+        <li>Download size</li>
+        <li>Changelog from the release notes</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <div class="step-content">
+      <h4>Install &amp; Restart</h4>
+      <p>Click <strong>Install Update</strong>. A progress bar shows download progress. After download, the update is verified (SHA256 checksum if available), extracted, and the app restarts automatically.</p>
+    </div>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Mandatory Updates</div>
+    <p>Updates are mandatory — you cannot skip them. This ensures all users run the latest version with bug fixes and security improvements.</p>
+  </div>
+
+  <p>If an update fails, an error message appears with a <strong>Copy Error</strong> button (for bug reports) and a <strong>Retry</strong> button.</p>
+
+  <!-- ===== PERSISTENCE ===== -->
+  <h2 id="persistence">Settings Storage</h2>
+
+  <p>All settings are stored in <code>runtime/settings.json</code> as a JSON file. This includes:</p>
+  <ul>
+    <li>All appearance overrides (MOTD, max players, online players, favicon path)</li>
+    <li>ViaVersion toggle</li>
+    <li>All advanced proxy settings (forwarding mode, secret, online mode, HAProxy, timeouts, etc.)</li>
+    <li>Selected theme</li>
+  </ul>
+
+  <p>To reset all settings to defaults, delete <code>runtime/settings.json</code> and restart the app.</p>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="wiki.html">Wiki</a>
+</footer>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('wikiSidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('wikiSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+</script>
+
+</body>
+</html>

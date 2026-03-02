@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playit.gg Setup — Block-Suite Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html" class="active">Wiki</a></li>
+      <li><a href="bug-report.html">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- WIKI LAYOUT -->
+<div class="wiki-layout">
+  <aside class="wiki-sidebar" id="wikiSidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">
+        Server Cloning <span class="arrow">&#9656;</span>
+      </div>
+      <ul class="sidebar-links open">
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="server-cloning.html">Server Cloning</a></li>
+        <li><a href="playit-setup.html" class="active">Playit.gg Setup</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li><a href="advanced-cloning.html">Advanced Options</a></li>
+      </ul>
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <main class="wiki-content">
+
+  <h1>Playit.gg Tunnel Setup</h1>
+  <p>Playit.gg creates a <strong>public tunnel</strong> so that players from the internet can reach your local Velocity proxy without port forwarding. This guide walks you through the <strong>complete setup</strong>: claiming the agent, creating a tunnel, configuring the origin, and connecting everything to Block-Suite.</p>
+
+  <div class="callout">
+    <div class="callout-title">💡 What is playit.gg?</div>
+    <p>Playit.gg is a free tunneling service. It gives you a public address (e.g. <code>your-server.gl.joinmc.link</code>) that routes traffic through their network to your local machine — no router/firewall changes needed.</p>
+  </div>
+
+  <!-- ===== OVERVIEW ===== -->
+  <h2 id="overview">How It Works</h2>
+
+  <pre><code>Player (internet)
+    │
+    ▼
+┌───────────────────────────┐
+│  Playit.gg Public Address │  ← your-server.gl.joinmc.link
+│  (playit.gg cloud)        │
+└───────────┬───────────────┘
+            │ tunnel
+            ▼
+┌───────────────────────────┐
+│  Playit Agent (local)     │  ← runtime/playit/playit.exe
+│  Origin: 127.0.0.1:25565  │
+└───────────┬───────────────┘
+            │ forwards to
+            ▼
+┌───────────────────────────┐
+│  Velocity Proxy (local)   │  ← listening on port 25565
+│  → forwards to target     │
+└───────────────────────────┘</code></pre>
+
+  <p>Players connect to the <strong>playit.gg public address</strong>. The playit agent running on your PC receives that traffic and forwards it to your <strong>local Velocity proxy</strong>, which then sends it to the <strong>target server</strong>.</p>
+
+  <!-- ===== FIRST TIME ===== -->
+  <h2 id="first-time">First-Time Setup (Claiming the Agent)</h2>
+
+  <p>The very first time you use playit.gg with Block-Suite, you need to <strong>claim</strong> the agent and link it to your playit.gg account. Here's the step-by-step:</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <div class="step-body">
+        <strong>Create a Playit.gg Account</strong><br>
+        Go to <a href="https://playit.gg" target="_blank">playit.gg</a> and sign up for a free account (you can use Google, Discord, or email). Keep this tab open — you'll need it soon.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <div class="step-body">
+        <strong>Click "Setup Environment" in Block-Suite</strong><br>
+        This downloads the playit agent (<code>playit.exe</code>) into <code>runtime/playit/</code> and prepares the Velocity config.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <div class="step-body">
+        <strong>Click "Start Playit.gg"</strong><br>
+        Block-Suite launches the playit agent. Since it's the first time, the agent has no secret key yet and needs to be claimed.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">4</div>
+      <div class="step-body">
+        <strong>Watch the Activity Log for the Claim URL</strong><br>
+        Within a few seconds, a line like this appears in the Activity Log:
+        <pre><code>[Playit.gg] *** CLAIM URL DETECTED: https://playit.gg/claim/abc-def-123 ***
+[Playit.gg] Open this URL in your browser to complete first-time setup.</code></pre>
+        <strong>Copy that URL and open it in your browser.</strong>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">5</div>
+      <div class="step-body">
+        <strong>Claim the Agent on Playit.gg</strong><br>
+        The claim page asks you to confirm linking this agent to your account. Click <strong>"Claim"</strong> or <strong>"Add Agent"</strong>. Once claimed, the agent receives a secret key that is saved to <code>runtime/playit/playit.toml</code> — you won't need to claim again.
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot">
+    <img src="assets/img/4.PNG" alt="Playit.gg claim page in the browser">
+  </div>
+
+  <div class="screenshot">
+    <img src="assets/img/5.PNG" alt="Playit.gg website — claim agent confirmation page in the browser">
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Don't skip the claim!</div>
+    <p>If you don't open the claim URL, the agent will keep printing it repeatedly. The tunnel <strong>will not work</strong> until the agent is claimed and linked to your account.</p>
+  </div>
+
+  <!-- ===== CREATE TUNNEL ===== -->
+  <h2 id="create-tunnel">Creating a Tunnel on Playit.gg</h2>
+
+  <p>After claiming the agent, you need to create a <strong>tunnel</strong> in the playit.gg dashboard that tells their servers where to forward player traffic.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <div class="step-body">
+        <strong>Go to the Playit.gg Dashboard</strong><br>
+        Open <a href="https://playit.gg/account/tunnels" target="_blank">playit.gg/account/tunnels</a> and log in.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <div class="step-body">
+        <strong>Click "Create Tunnel"</strong><br>
+        You'll see options for tunnel type. Select <strong>"Minecraft Java"</strong> (this sets up a TCP tunnel on port 25565 by default).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <div class="step-body">
+        <strong>Configure the Tunnel Origin</strong><br>
+        This is the most important part — it tells playit.gg where to send traffic on your local machine:
+        <table>
+          <thead><tr><th>Field</th><th>Value</th><th>Explanation</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Local IP</strong></td>
+              <td><code>127.0.0.1</code></td>
+              <td>Localhost — the playit agent and Velocity proxy are on the same machine</td>
+            </tr>
+            <tr>
+              <td><strong>Local Port</strong></td>
+              <td><code>25565</code></td>
+              <td>Must match the <strong>Proxy Port</strong> in Block-Suite's Server Cloning tab (default: 25565)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">4</div>
+      <div class="step-body">
+        <strong>Set Proxy Protocol</strong><br>
+        Under the tunnel settings, look for the <strong>Proxy Protocol</strong> option:
+        <table>
+          <thead><tr><th>Option</th><th>When to Use</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Proxy Protocol v2 (recommended)</strong></td>
+              <td>Use this when you have <strong>HAProxy Protocol = ON</strong> in Block-Suite's Advanced Cloning settings (default). This forwards the real player IP through the tunnel.</td>
+            </tr>
+            <tr>
+              <td><strong>None / Disabled</strong></td>
+              <td>Use this when you have <strong>HAProxy Protocol = OFF</strong> in Block-Suite. All players will appear with the tunnel's IP instead of their real IP.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="callout danger">
+          <div class="callout-title">⚠️ These MUST match!</div>
+          <p>The playit.gg tunnel Proxy Protocol setting <strong>must match</strong> the HAProxy Protocol setting in Block-Suite. If one is ON and the other is OFF, players will get disconnected immediately on connect.</p>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">5</div>
+      <div class="step-body">
+        <strong>Save the Tunnel</strong><br>
+        Click <strong>"Create"</strong> or <strong>"Save"</strong>. Playit.gg assigns you a public address like:
+        <pre><code>your-server.gl.joinmc.link</code></pre>
+        or
+        <pre><code>something.at.ply.gg:12345</code></pre>
+        This is the address players will use to connect.
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot">
+    <img src="assets/img/6.PNG" alt="Playit.gg dashboard — creating a new Minecraft tunnel with origin settings">
+  </div>
+
+  <div class="screenshot">
+    <img src="assets/img/7.PNG" alt="Playit.gg dashboard — Tunnel origin configuration showing Local IP (127.0.0.1), Local Port (25565), and Proxy Protocol dropdown">
+  </div>
+
+  <div class="screenshot">
+    <img src="assets/img/8.PNG" alt="Playit.gg dashboard — Completed tunnel showing the assigned public address">
+  </div>
+
+  <!-- ===== PORT MATCHING ===== -->
+  <h2 id="port-matching">Port Matching: Block-Suite ↔ Playit.gg</h2>
+
+  <p>The <strong>Local Port</strong> in the playit.gg tunnel must match the <strong>Proxy Port</strong> field in Block-Suite's Server Cloning tab. Here's the flow:</p>
+
+  <table>
+    <thead>
+      <tr><th>Component</th><th>Setting</th><th>Default</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Block-Suite → Server Cloning tab</td>
+        <td><strong>Proxy Port</strong></td>
+        <td><code>25565</code></td>
+      </tr>
+      <tr>
+        <td>Velocity (auto-generated)</td>
+        <td>Bind address</td>
+        <td><code>0.0.0.0:25565</code></td>
+      </tr>
+      <tr>
+        <td>Playit.gg tunnel</td>
+        <td><strong>Local Port</strong> (origin)</td>
+        <td><code>25565</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>If you change the Proxy Port in Block-Suite (e.g. to <code>25577</code>), you <strong>must</strong> also update the Local Port in the playit.gg tunnel to <code>25577</code>.</p>
+
+  <div class="screenshot">
+    <img src="assets/img/9-1.PNG" alt="Block-Suite Server Cloning tab showing Proxy Port field set to 25577">
+    <img src="assets/img/9-2.PNG" alt="Playit.gg dashboard showing the same port (25577) in the tunnel origin Local Port field">
+  </div>
+
+  <!-- ===== PROXY PROTOCOL ===== -->
+  <h2 id="proxy-protocol">Proxy Protocol Explained</h2>
+
+  <p>The <strong>Proxy Protocol</strong> is a header that the playit.gg tunnel prepends to each connection, containing the player's <strong>real IP address</strong>. Velocity reads this header to know the actual player IP instead of seeing the tunnel's IP.</p>
+
+  <h3>How the settings connect</h3>
+
+  <table>
+    <thead>
+      <tr><th>Playit.gg Tunnel</th><th>Block-Suite Setting</th><th>Result</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Proxy Protocol = <strong>v2</strong></td>
+        <td>HAProxy Protocol = <strong>ON</strong></td>
+        <td>✅ Works — real player IPs visible in intercepted data</td>
+      </tr>
+      <tr>
+        <td>Proxy Protocol = <strong>None</strong></td>
+        <td>HAProxy Protocol = <strong>OFF</strong></td>
+        <td>✅ Works — but all players show the tunnel's IP</td>
+      </tr>
+      <tr>
+        <td>Proxy Protocol = <strong>v2</strong></td>
+        <td>HAProxy Protocol = <strong>OFF</strong></td>
+        <td>❌ Broken — players disconnected (Velocity can't parse the header)</td>
+      </tr>
+      <tr>
+        <td>Proxy Protocol = <strong>None</strong></td>
+        <td>HAProxy Protocol = <strong>ON</strong></td>
+        <td>❌ Broken — players disconnected (Velocity expects a header that isn't there)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout success">
+    <div class="callout-title">✅ Recommended Setup</div>
+    <p>Use <strong>Proxy Protocol v2</strong> on the playit.gg tunnel + <strong>HAProxy Protocol ON</strong> in Block-Suite. This gives you real player IPs for geolocation and intelligence gathering.</p>
+  </div>
+
+  <!-- ===== FULL WORKFLOW ===== -->
+  <h2 id="full-workflow">Complete Workflow (Start to Finish)</h2>
+
+  <p>Once the one-time claim and tunnel creation are done, this is the workflow for every session:</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <div class="step-body">
+        <strong>Enter Target Server</strong><br>
+        In Server Cloning tab, set the target IP and port. Click <strong>Check Status</strong> to verify the target is online.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <div class="step-body">
+        <strong>Click "Setup Environment"</strong><br>
+        Downloads Velocity + plugins, generates configs. Wait for <em>"Environment setup complete!"</em> in the Activity Log.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <div class="step-body">
+        <strong>Click "Start Velocity"</strong><br>
+        Launches the Velocity proxy. The status dot turns green. The interception server also starts automatically.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">4</div>
+      <div class="step-body">
+        <strong>Click "Start Playit.gg"</strong><br>
+        Launches the playit agent. It connects to playit.gg cloud and activates your tunnel. The public address appears in the Activity Log and the status bar:
+        <pre><code>[Playit.gg] *** PUBLIC ADDRESS: your-server.gl.joinmc.link ***
+[Playit.gg] Share this address for players to connect!</code></pre>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">5</div>
+      <div class="step-body">
+        <strong>Share the Public Address</strong><br>
+        Copy the address with the <strong>Copy IP</strong> button in the status bar. Players connect to this address in their Minecraft client.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">6</div>
+      <div class="step-body">
+        <strong>Intercept & Analyze</strong><br>
+        When players join, their data appears in the Intercepted Data table. Click on a player in the Players panel for the full More Info overlay.
+      </div>
+    </div>
+  </div>
+
+  <div class="screenshot">
+    <img src="assets/img/1.PNG" alt="Block-Suite with all 3 status dots green and public address visible in the status bar">
+  </div>
+
+  <!-- ===== ADDRESS PERSISTENCE ===== -->
+  <h2 id="persistence">Tunnel Address Persistence</h2>
+
+  <p>Block-Suite automatically saves the detected tunnel address to <code>runtime/playit/tunnel_address.txt</code>. On subsequent launches, it restores the address immediately instead of waiting for playit.gg to re-detect it.</p>
+
+  <p>The address is also detected from:</p>
+  <ul class="feature-list">
+    <li>The <code>playit.toml</code> config file (if it contains domain info)</li>
+    <li>The playit.gg API (using the agent's secret key)</li>
+    <li>Real-time output parsing (claim URLs, NewClient logs, tunnel domain patterns)</li>
+  </ul>
+
+  <!-- ===== TROUBLESHOOTING ===== -->
+  <h2 id="troubleshooting">Troubleshooting</h2>
+
+  <h3>Claim URL doesn't appear</h3>
+  <ul class="feature-list">
+    <li>Make sure you clicked <strong>"Setup Environment"</strong> first — the playit agent must be downloaded</li>
+    <li>Check the Activity Log for any error messages from <code>[Playit.gg]</code></li>
+    <li>Try stopping and restarting playit.gg</li>
+    <li>If <code>runtime/playit/playit.toml</code> already exists from a previous claim, delete it and restart to get a fresh claim URL</li>
+  </ul>
+
+  <h3>Players disconnect immediately</h3>
+  <ul class="feature-list">
+    <li><strong>Most common cause:</strong> Proxy Protocol mismatch. Check the table above — both sides must match</li>
+    <li>Verify the playit.gg tunnel's <strong>Local Port</strong> matches Block-Suite's <strong>Proxy Port</strong></li>
+    <li>Ensure Velocity is actually running (green dot in status bar)</li>
+  </ul>
+
+  <h3>Public address shows "N/A"</h3>
+  <ul class="feature-list">
+    <li>The tunnel may not be active yet. Give it 10-15 seconds after starting playit.gg</li>
+    <li>Check the Activity Log for <code>[Playit.gg] *** PUBLIC ADDRESS: ... ***</code></li>
+    <li>If using for the first time, you <strong>must claim the agent first</strong> (see above)</li>
+    <li>Try checking your tunnel address manually at <a href="https://playit.gg/account/tunnels" target="_blank">playit.gg/account/tunnels</a></li>
+  </ul>
+
+  <h3>Agent exits immediately (exit code 1)</h3>
+  <ul class="feature-list">
+    <li>A corrupt <code>playit.toml</code> can cause this. Delete <code>runtime/playit/playit.toml</code> and restart</li>
+    <li>Ensure no firewall is blocking <code>playit.exe</code> from making outbound connections</li>
+    <li>Check if another instance of playit is already running (Task Manager → look for <code>playit.exe</code>)</li>
+  </ul>
+
+  <!-- ===== FILE STRUCTURE ===== -->
+  <h2 id="files">Playit.gg Files</h2>
+
+  <pre><code>runtime/
+  playit/
+    playit.exe              ← The playit.gg agent binary (auto-downloaded)
+    playit.toml             ← Agent config + secret key (generated after claim)
+    tunnel_address.txt      ← Saved public address for quick restore</code></pre>
+
+  <div class="callout warning">
+    <div class="callout-title">⚠️ Don't share playit.toml</div>
+    <p>The <code>playit.toml</code> file contains your agent's <strong>secret key</strong>. Anyone with this file can control your tunnels. Keep it private.</p>
+  </div>
+
+  </main>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="wiki.html">Wiki</a>
+</footer>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('wikiSidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('wikiSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wiki — Block-Suite Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html" class="active">Wiki</a></li>
+      <li><a href="bug-report.html">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== WIKI LAYOUT ===== -->
+<div class="wiki-layout">
+
+  <!-- Sidebar -->
+  <aside class="wiki-sidebar" id="wikiSidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading open" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open')">
+        Server Cloning <span class="arrow">&#9656;</span>
+      </div>
+      <ul class="sidebar-links open">
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="server-cloning.html">Server Cloning</a></li>
+        <li><a href="playit-setup.html">Playit.gg Setup</a></li>
+        <li><a href="settings.html">Settings</a></li>
+        <li><a href="advanced-cloning.html">Advanced Options</a></li>
+      </ul>
+    </div>
+    <!-- Future sections will be added here -->
+  </aside>
+
+  <!-- Overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- Content -->
+  <main class="wiki-content">
+    <h1>Block-Suite Wiki</h1>
+    <p>Welcome to the official Block-Suite documentation. Choose a topic from the sidebar or browse the available modules below.</p>
+
+    <!-- Server Cloning module overview -->
+    <h2 id="server-cloning">Server Cloning</h2>
+    <p>The Server Cloning module lets you deploy a transparent MITM proxy that mirrors any Minecraft server. Players connect to your proxy thinking it's the real server, while Block-Suite intercepts all data in real-time.</p>
+
+    <div class="card-grid">
+      <a href="getting-started.html" class="card" style="text-decoration:none;">
+        <div class="card-icon">&#128640;</div>
+        <h3>Getting Started</h3>
+        <p>System requirements, download, install, and your first server clone in under 5 minutes.</p>
+      </a>
+
+      <a href="server-cloning.html" class="card" style="text-decoration:none;">
+        <div class="card-icon">&#128260;</div>
+        <h3>Server Cloning Tab</h3>
+        <p>Full walkthrough of the cloning interface — config, controls, data table, player overlay, log console.</p>
+      </a>
+
+      <a href="playit-setup.html" class="card" style="text-decoration:none;">
+        <div class="card-icon">&#127760;</div>
+        <h3>Playit.gg Setup</h3>
+        <p>Step-by-step tunnel setup so players can reach your proxy from the internet without port forwarding.</p>
+      </a>
+
+      <a href="settings.html" class="card" style="text-decoration:none;">
+        <div class="card-icon">&#9881;</div>
+        <h3>Settings</h3>
+        <p>Customize MOTD, favicon, player count, max players, theme selection, and auto-update preferences.</p>
+      </a>
+
+      <a href="advanced-cloning.html" class="card" style="text-decoration:none;">
+        <div class="card-icon">&#128295;</div>
+        <h3>Advanced Options</h3>
+        <p>Proxy forwarding modes, authentication, HAProxy protocol, ViaVersion, compression, and recommended presets.</p>
+      </a>
+    </div>
+
+    <h2 id="more">More Modules</h2>
+    <p class="text-dim">Additional assessment modules are currently in development. This wiki will be expanded as new features are released. Follow the <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub repository</a> for updates.</p>
+  </main>
+</div>
+
+<!-- Mobile sidebar toggle button -->
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">&#9776;</button>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="index.html">Home</a>
+</footer>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('wikiSidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('wikiSidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Block-Suite — Minecraft Security Assessment Toolkit</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="wiki.html">Wiki</a></li>
+      <li><a href="bug-report.html">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <img src="assets/img/logo.png" alt="Block-Suite Logo" class="hero-logo">
+  <h1>Block-Suite</h1>
+  <p class="tagline">
+    The all-in-one Minecraft server security assessment toolkit.<br>
+    Test, intercept, analyze — from a single desktop application.
+  </p>
+  <div class="hero-buttons">
+    <a href="wiki.html" class="btn btn-primary">Explore the Wiki</a>
+    <a href="https://github.com/itsreyi/BlockSuite/releases/latest" class="btn btn-outline" target="_blank">Download Latest</a>
+  </div>
+</section>
+
+<!-- ===== WHAT IS BLOCK-SUITE ===== -->
+<section class="container">
+  <h2 class="section-title">What is Block-Suite?</h2>
+  <p class="text-center text-dim" style="max-width:700px; margin:0 auto 2rem;">
+    Block-Suite is a modular desktop application built for Minecraft server security assessments.
+    It provides a collection of tools — each focused on a specific testing scenario — all managed
+    through a clean JavaFX interface with 5 built-in themes, auto-updates, and cross-version support
+    via ViaVersion.
+  </p>
+</section>
+
+<!-- ===== MODULES ===== -->
+<section class="container">
+  <h2 class="section-title">Modules</h2>
+  <p class="text-center text-dim mb-3">Each module is a self-contained feature accessible from the main interface.</p>
+
+  <div class="card-grid">
+    <a href="wiki.html" class="card" style="text-decoration:none;">
+      <div class="card-icon">&#128260;</div>
+      <h3>Server Cloning <span class="badge badge-green">Available</span></h3>
+      <p>Deploy a transparent MITM proxy that mirrors any Minecraft server. Intercept logins, credentials,
+         player data, IPs, and skins in real-time with integrated playit.gg tunneling.</p>
+    </a>
+
+    <div class="card" style="opacity:0.5; cursor:default;">
+      <div class="card-icon">&#128295;</div>
+      <h3>More coming soon <span class="badge badge-orange">Planned</span></h3>
+      <p>New assessment modules are in development. Follow the GitHub repository for announcements
+         on upcoming features and release notes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HIGHLIGHTS ===== -->
+<section class="container">
+  <h2 class="section-title">Platform Highlights</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">&#127912;</div>
+      <h3>5 Themes</h3>
+      <p>Dark Blue, Green Suite, Black Green, Purple Suite, Black Purple. Live theme switching with matching icon tinting.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#128259;</div>
+      <h3>Auto-Updates</h3>
+      <p>One-click updates from GitHub Releases. Validates checksums and applies updates seamlessly on next launch.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#127760;</div>
+      <h3>ViaVersion Support</h3>
+      <p>Connect players on any Minecraft version to any server version. Cross-version protocol translation is built in.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#128274;</div>
+      <h3>Modular Architecture</h3>
+      <p>Each tool runs independently. Clean separation between the GUI, proxy engine, plugins, and data layer.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#128187;</div>
+      <h3>One-Click Setup</h3>
+      <p>No manual configuration. Block-Suite downloads and configures everything automatically — Velocity, plugins, tunnels.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon">&#128202;</div>
+      <h3>Data Export</h3>
+      <p>Export intercepted data as CSV. Copy individual fields, browse player histories, and inspect geolocation data.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURE ROADMAP ===== -->
+<section class="container text-center">
+  <h2 class="section-title">Feature Status</h2>
+  <div class="tag-list">
+    <span class="tag active">Server Cloning</span>
+    <span class="tag active">Playit.gg Tunneling</span>
+    <span class="tag active">5 Themes</span>
+    <span class="tag active">Auto-Updates</span>
+    <span class="tag active">ViaVersion</span>
+    <span class="tag active">Player Geolocation</span>
+    <span class="tag active">CSV Export</span>
+    <span class="tag soon">New modules TBA</span>
+  </div>
+</section>
+
+<!-- ===== QUICK LINKS ===== -->
+<section class="container text-center">
+  <h2 class="section-title">Get Started</h2>
+  <div class="hero-buttons">
+    <a href="wiki.html" class="btn btn-primary">Read the Wiki</a>
+    <a href="https://github.com/itsreyi/BlockSuite" class="btn btn-outline" target="_blank">View on GitHub</a>
+    <a href="bug-report.html" class="btn btn-outline">Report a Bug</a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="wiki.html">Wiki</a>
+</footer>
+
+</body>
+</html>

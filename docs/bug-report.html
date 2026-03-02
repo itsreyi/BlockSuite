@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Report — Block-Suite Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" href="assets/img/logo.png" type="image/png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo.png" alt="Logo"> Block-Suite
+    </a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="wiki.html">Wiki</a></li>
+      <li><a href="bug-report.html" class="active">Bug Report</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="doc-content">
+
+  <h1>Bug Reports &amp; Contributing</h1>
+  <p>Block-Suite is actively developed. If you find a bug, experience unexpected behavior, or have a feature request, please report it on GitHub so it can be addressed promptly.</p>
+
+  <!-- ===== REPORT ===== -->
+  <h2 id="report">How to Report a Bug</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">1</div>
+      <div class="step-body">
+        <strong>Go to GitHub Issues</strong><br>
+        Open <a href="https://github.com/itsreyi/BlockSuite/issues" target="_blank">github.com/itsreyi/BlockSuite/issues</a> and click <strong>New Issue</strong>.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <div class="step-body">
+        <strong>Use a clear title</strong><br>
+        Summarize the issue in a few words. Good: <em>"Velocity fails to start when target port is above 60000"</em>. Bad: <em>"doesn't work"</em>.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <div class="step-body">
+        <strong>Fill in the details</strong><br>
+        Use the template below. The more info you provide, the faster the bug can be reproduced and fixed.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">4</div>
+      <div class="step-body">
+        <strong>Submit & follow up</strong><br>
+        After creating the issue, watch for comments asking for clarifications.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TEMPLATE ===== -->
+  <h2 id="template">Bug Report Template</h2>
+
+  <p>Copy and paste this into your GitHub issue body:</p>
+
+  <pre><code>## Bug Report
+
+**Block-Suite Version:** (e.g. v1.0.0 — check title bar)
+**OS:** (e.g. Windows 11 23H2)
+**Java Version:** (run `java -version`)
+
+### What happened?
+&lt;Describe the bug clearly. What did you expect vs. what actually happened?&gt;
+
+### Steps to Reproduce
+1. Open Block-Suite
+2. Go to [tab name]
+3. Set [these options]
+4. Click [button]
+5. ==> Bug occurs
+
+### Error Messages / Logs
+&lt;Paste any error text from the Activity Log, console, or Velocity logs.
+If none, write "No errors shown."&gt;
+
+```
+Paste log output here
+```
+
+### Screenshots
+&lt;Attach screenshots that show the issue. Use drag-and-drop on GitHub.&gt;
+
+### Settings
+- Target IP/Port: 
+- Forwarding Mode: 
+- Online Mode: 
+- ViaVersion: 
+- Theme: 
+
+### Additional Context
+&lt;Any other relevant details: target server type, network setup, etc.&gt;
+</code></pre>
+
+  <div class="callout">
+    <div class="callout-title">💡 Tip</div>
+    <p>You can grab the full Activity Log by clicking the <strong>Open in Separate Window</strong> icon on the Activity Log, then copy everything. You can also right-click the app's title bar for the version number.</p>
+  </div>
+
+  <!-- ===== LOGS ===== -->
+  <h2 id="logs">Where to Find Logs</h2>
+
+  <table>
+    <thead><tr><th>Log Source</th><th>Location</th><th>What It Contains</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Activity Log</td>
+        <td>Server Cloning tab → bottom panel</td>
+        <td>All proxy events, connection attempts, player data, errors. Copy or open in separate window.</td>
+      </tr>
+      <tr>
+        <td>Velocity Console</td>
+        <td><code>runtime/velocity/logs/latest.log</code></td>
+        <td>Full Velocity proxy logs — startup, connection details, stack traces.</td>
+      </tr>
+      <tr>
+        <td>Java Console</td>
+        <td>Run Block-Suite from terminal: <code>java -jar blocksuite.jar</code></td>
+        <td>JavaFX exceptions, unhandled errors, startup failures.</td>
+      </tr>
+      <tr>
+        <td>Playit.gg Logs</td>
+        <td><code>runtime/playit/</code></td>
+        <td>Tunnel connection status, errors, claim URLs.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ===== TROUBLESHOOTING ===== -->
+  <h2 id="troubleshooting">Common Issues & Solutions</h2>
+
+  <h3>Velocity won't start</h3>
+  <ul class="feature-list">
+    <li>Ensure <strong>Java 17+</strong> is installed and in your system PATH</li>
+    <li>Check if another process is using <strong>port 25577</strong> (default Velocity bind port)</li>
+    <li>Look for errors in <code>runtime/velocity/logs/latest.log</code></li>
+    <li>Click <strong>Setup Environment</strong> again to regenerate configs</li>
+  </ul>
+
+  <h3>Players can't connect / get disconnected</h3>
+  <ul class="feature-list">
+    <li>Verify the <strong>target server is online</strong> using the Status button</li>
+    <li>Check the <strong>forwarding mode</strong> — try <code>none</code> first, then <code>legacy</code> if needed</li>
+    <li>If using playit.gg, ensure the tunnel is active and the claim URL was completed</li>
+    <li>Try disabling <strong>HAProxy Protocol</strong> if players drop immediately on connect</li>
+    <li>Enable <strong>ViaVersion</strong> if the client version doesn't match the target</li>
+  </ul>
+
+  <h3>Server status shows "Offline" but the server is running</h3>
+  <ul class="feature-list">
+    <li>Double-check the <strong>IP address</strong> and <strong>port</strong> in Server Cloning tab</li>
+    <li>The target may have a firewall blocking status pings — try with a known public server first</li>
+    <li>Some servers use SRV records; try the numeric IP directly</li>
+  </ul>
+
+  <h3>Playit.gg tunnel not working</h3>
+  <ul class="feature-list">
+    <li>The first time you start a tunnel, a <strong>claim URL</strong> appears in the Activity Log — you must open it in a browser and claim the tunnel</li>
+    <li>Check if <code>runtime/playit/playit.exe</code> was downloaded successfully</li>
+    <li>Ensure no firewall is blocking outgoing connections to playit.gg</li>
+  </ul>
+
+  <h3>Update check fails / "Copy Error" appears</h3>
+  <ul class="feature-list">
+    <li>Block-Suite checks <code>https://api.github.com</code> for new releases</li>
+    <li>Ensure you have internet connectivity</li>
+    <li>If the error persists, click <strong>Copy Error</strong> to copy the technical details and include them in your bug report</li>
+  </ul>
+
+  <h3>"Port already in use" error</h3>
+  <ul class="feature-list">
+    <li>A previous Velocity instance may still be running. Open Task Manager and end any <strong>java.exe</strong> processes.</li>
+    <li>Another application may be using port 25577. Change the port in Velocity's config or stop the other app.</li>
+  </ul>
+
+  <!-- ===== FEATURE REQUEST ===== -->
+  <h2 id="features">Feature Requests</h2>
+  <p>Have an idea for a new feature? Open a GitHub issue with the <strong>enhancement</strong> label:</p>
+
+  <pre><code>## Feature Request
+
+### What would you like?
+&lt;Describe the feature clearly.&gt;
+
+### Why is it useful?
+&lt;Explain the use case or problem it solves.&gt;
+
+### Possible implementation
+&lt;Optional: suggest how it could work.&gt;
+</code></pre>
+
+  <!-- ===== SECURITY ===== -->
+  <h2 id="security">Security & Responsible Use</h2>
+
+  <div class="callout danger">
+    <div class="callout-title">🔒 Authorized Testing Only</div>
+    <p>Block-Suite is designed for <strong>authorized security assessments</strong> of Minecraft servers. Only use it on servers you own or have explicit written permission to test. Unauthorized use may violate laws in your jurisdiction.</p>
+  </div>
+
+  <p>If you discover a security vulnerability in Block-Suite itself, please report it privately via GitHub's <strong>Security Advisory</strong> feature rather than opening a public issue.</p>
+
+  <!-- ===== LINKS ===== -->
+  <h2 id="links">Quick Links</h2>
+
+  <div class="card-grid" style="margin-top: 1.5rem;">
+    <a href="https://github.com/itsreyi/BlockSuite/issues/new" target="_blank" class="card" style="text-decoration:none;">
+      <h3>🐛 New Bug Report</h3>
+      <p>Open a new issue on GitHub</p>
+    </a>
+    <a href="https://github.com/itsreyi/BlockSuite/issues" target="_blank" class="card" style="text-decoration:none;">
+      <h3>📋 View All Issues</h3>
+      <p>Browse existing reports</p>
+    </a>
+    <a href="https://github.com/itsreyi/BlockSuite/releases" target="_blank" class="card" style="text-decoration:none;">
+      <h3>📦 Releases</h3>
+      <p>Download the latest version</p>
+    </a>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  Block-Suite &copy; 2025 &mdash; For authorized security testing only.<br>
+  <a href="https://github.com/itsreyi/BlockSuite" target="_blank">GitHub</a> &middot;
+  <a href="bug-report.html">Report Bug</a> &middot;
+  <a href="wiki.html">Wiki</a>
+</footer>
+
+</body>
+</html>
